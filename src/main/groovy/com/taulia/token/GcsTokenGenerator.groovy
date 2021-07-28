@@ -9,12 +9,14 @@ class GcsTokenGenerator {
 
   String getBearerToken() {
     InputStream saFileStream = getClass().getClassLoader().getResourceAsStream("sa-key.json")
-    ServiceAccountCredentials serviceAccountCredentials  = ServiceAccountCredentials.fromStream(saFileStream)
-    GoogleCredentials googleCredentials = serviceAccountCredentials.createScoped(["https://www.googleapis.com/auth/cloud-platform"])
+    ServiceAccountCredentials serviceAccountCredentials = ServiceAccountCredentials.fromStream(saFileStream)
+    GoogleCredentials googleCredentials = serviceAccountCredentials
+      .createScoped(["https://mail.google.com"])
+      .createDelegated("alyssaw@inbox.taulia.com")
     Map<String, List<String>>  requestMetadata = googleCredentials.requestMetadata
     List<String> authorization = requestMetadata.get('Authorization')
     String bearerToken = authorization.get(0)
-    bearerToken
+    return bearerToken
   }
 
   static void main(String[] args) {
